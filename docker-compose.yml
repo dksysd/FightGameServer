@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     container_name: fight-game-chatbot
     env_file:
-      - services/FightGameCharBot/.env
+      - services/FightGameChatBot/.env
     restart: unless-stopped
     networks:
       - server-network
