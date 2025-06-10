@@ -1,11 +1,11 @@
 services:
   chatbot-service:
     build:
-      context: services/FightGameChatBot
+      context: services/FightGameServer_ChatBot
       dockerfile: Dockerfile
     container_name: fight-game-chatbot
     env_file:
-      - services/FightGameChatBot/.env
+      - services/FightGameServer_ChatBot/.env
     restart: unless-stopped
     networks:
       - server-network
