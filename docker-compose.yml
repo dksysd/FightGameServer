@@ -1,7 +1,7 @@
 services:
   chatbot-service:
     build:
-      context: services/FightGameCharBot
+      context: services/FightGameChatBot
       dockerfile: Dockerfile
     container_name: fight-game-chatbot
     env_file:
