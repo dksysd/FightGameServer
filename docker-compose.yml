@@ -1,0 +1,37 @@
+services:
+  chatbot-service:
+    build:
+      context: services/FightGameCharBot
+      dockerfile: Dockerfile
+    container_name: fight-game-chatbot
+    env_file:
+      - services/FightGameCharBot/.env
+    restart: unless-stopped
+    networks:
+      - server-network
+  
+  game-server:
+    build:
+      context: services/FightingGameServer_Rest/FightingGameServer_Rest
+      dockerfile: Dockerfile
+    container_name: fight-game-rest
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+      - TZ=Asia/Seoul
+      - ChatbotGrpc__Address=http://chatbot-service:50051
+    volumes:
+      - ./logs:/app/logs
+    restart: unless-stopped
+    networks:
+      - server-network
+
+networks:
+  server-network:
+    driver: bridge
+
+volumes:
+  game-rest-logs:
+    driver: local
