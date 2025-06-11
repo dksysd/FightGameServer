@@ -11,7 +11,6 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
       - ./mysql/init:/docker-entrypoint-initdb.d:ro
-    command: --default-authentication-plugin=mysql_native_password
     restart: unless-stopped
     networks:
       - db-network
@@ -33,7 +32,7 @@ services:
     networks:
       - server-network
     healthcheck:
-      test: ["CMD", "grpc_health_probe", "-addr=localhost:50051", "-service=chatbot.CharacterChatService"]
+      test: ["CMD", "grpc_health_probe", "-addr=:50051", "-service=chatbot.CharacterChatService"]
       interval: 30s
       timeout: 10s
       retries: 3
