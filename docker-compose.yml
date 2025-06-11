@@ -1,4 +1,27 @@
 services:
+  mysql:
+    image: mysql:latest
+    container_name: fight-game-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_password
+      - MYSQL_DATABASE=fightgame_db
+      - MYSQL_USER=fightgame_user
+      - MYSQL_PASSWORD=fightgame_password
+      - TZ=Asia/Seoul
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d:ro
+    command: --default-authentication-plugin=mysql_native_password
+    restart: unless-stopped
+    networks:
+      - db-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+      interval: 10s
+      start_period: 40s
+
   chatbot-service:
     build:
       context: services/FightGameServer_Chatbot
@@ -9,11 +32,17 @@ services:
     restart: unless-stopped
     networks:
       - server-network
+    healthcheck:
+      test: ["CMD", "grpc_health_probe", "-addr=localhost:50051", "-service=chatbot.CharacterChatService"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
   
   game-server:
     build:
-      context: services/FightGameServer_Rest/FightingGameServer_Rest
-      dockerfile: Dockerfile
+      context: services/FightGameServer_Rest
+      dockerfile: FightingGameServer_Rest/Dockerfile
     container_name: fight-game-rest
     ports:
       - "8080:8080"
@@ -22,16 +51,27 @@ services:
       - ASPNETCORE_URLS=http://+:8080
       - TZ=Asia/Seoul
       - ChatbotGrpc__Address=http://chatbot-service:50051
+      - ConnectionStrings__DefaultConnection=Server=mysql;Database=fightgame_db;Uid=fightgame_user;Pwd=fightgame_password;CharSet=utf8mb4;
     volumes:
       - ./logs:/app/logs
     restart: unless-stopped
     networks:
       - server-network
+      - db-network
+    depends_on:
+      mysql:
+        condition: service_healthy
+      chatbot-service:
+        condition: service_healthy
 
 networks:
   server-network:
     driver: bridge
+  db-network:
+    driver: bridge
 
 volumes:
   game-rest-logs:
+    driver: local
+  mysql_data:
     driver: local
