@@ -28,13 +28,11 @@
 
 ### 환경 변수 설정
 
-`services/FightGameCharBot/.env` 파일을 생성하고 다음 변수들을 설정하세요:
+`services/FightGameChatBot/.env` 파일에서 다음 변수들을 설정하세요:
 
 ```env
 # 예시 - 실제 값으로 교체 필요
-API_KEY=your_api_key_here
-DATABASE_URL=your_database_url
-LOG_LEVEL=info
+GOOGLE_API_KEY=your_api_key_here
 ```
 
 ### 실행 방법
@@ -45,19 +43,12 @@ LOG_LEVEL=info
    cd <project-directory>
    ```
 
-2. **환경 변수 파일 설정**
+2. **서비스 빌드 및 시작**
    ```bash
-   # 채팅봇 서비스 환경 변수 설정
-   cp services/FightGameCharBot/.env.example services/FightGameCharBot/.env
-   # .env 파일을 편집하여 실제 값으로 수정
+   docker-compose up --build 
    ```
 
-3. **서비스 빌드 및 시작**
-   ```bash
-   docker-compose up --build
-   ```
-
-4. **백그라운드에서 실행**
+3. **백그라운드에서 실행**
    ```bash
    docker-compose up -d --build
    ```
@@ -133,7 +124,7 @@ docker-compose up --no-build
 ## API 문서
 
 Game Server의 API 문서는 서비스 실행 후 다음 경로에서 확인할 수 있습니다:
-- Swagger UI: http://localhost:8080/swagger (설정된 경우)
+- Swagger UI: http://localhost:8080/swagger (ASPNETCORE_ENVIRONMENT=Development 환경에서만)
 
 ## 네트워크 구성
 
