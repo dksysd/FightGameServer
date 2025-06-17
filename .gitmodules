@@ -1,6 +1,6 @@
 [submodule "services/FightGameServer_Rest"]
 	path = services/FightGameServer_Rest
-	url = git@github.com:dksysd/FightingGameServer_Rest.git
+	url = https://github.com/dksysd/FightingGameServer_Rest.git
 [submodule "services/FightGameServer_Chatbot"]
 	path = services/FightGameServer_Chatbot
-	url = git@github.com:dksysd/FightGameChatBot.git
+	url = https://github.com/dksysd/FightGameChatBot.git

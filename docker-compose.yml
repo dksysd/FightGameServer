@@ -1,6 +1,6 @@
 services:
   mysql:
-    image: mysql:latest
+    image: mysql:8.0
     container_name: fight-game-mysql
     environment:
       - MYSQL_ROOT_PASSWORD=root_password
@@ -32,7 +32,7 @@ services:
     networks:
       - server-network
     healthcheck:
-      test: ["CMD", "grpc_health_probe", "-addr=:50051", "-service=chatbot.CharacterChatService"]
+      test: ["CMD", "python", "health_check.py"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -52,7 +52,7 @@ services:
       - ChatbotGrpc__Address=http://chatbot-service:50051
       - ConnectionStrings__DefaultConnection=Server=mysql;Database=fightgame_db;Uid=fightgame_user;Pwd=fightgame_password;CharSet=utf8mb4;
     volumes:
-      - ./logs:/app/logs
+      - game-rest-logs:/app/logs
     restart: unless-stopped
     networks:
       - server-network
